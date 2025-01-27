@@ -1,6 +1,8 @@
 val kstreamplifyVersion: String by project
 val avroVersion: String by project
 val kafkaAvroSerializerVersion: String by project
+val swaggerAnnotationsVersion: String by project
+val kafkaAvroSerdeVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.9.25"
@@ -34,7 +36,8 @@ dependencies {
     implementation("com.michelin:kstreamplify-spring-boot:$kstreamplifyVersion")
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("io.confluent:kafka-avro-serializer:$kafkaAvroSerializerVersion")
-    implementation("io.confluent:kafka-streams-avro-serde:7.8.0")
+    implementation("io.swagger.core.v3:swagger-annotations:$swaggerAnnotationsVersion")
+    implementation("io.confluent:kafka-streams-avro-serde:$kafkaAvroSerdeVersion")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")

@@ -18,4 +18,7 @@ kafka:
     bootstrap.servers: 'localhost:9092'
     client.id: 'demo'
     schema.registry.url: 'http://localhost:8081'
-    state.dir: '/tmp/state'
+    state.dir: '/tmp/state-2'
+
+server:
+  port: 8082
