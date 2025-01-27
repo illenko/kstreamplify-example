@@ -18,7 +18,10 @@ kafka:
     bootstrap.servers: 'localhost:9092'
     client.id: 'demo'
     schema.registry.url: 'http://localhost:8081'
-    state.dir: '/tmp/state-2'
+    state.dir: '/tmp/state'
+    default.deserialization.exception.handler: 'com.michelin.kstreamplify.error.DlqDeserializationExceptionHandler'
+    default.production.exception.handler: 'com.michelin.kstreamplify.error.DlqProductionExceptionHandler'
+
 
 server:
-  port: 8082
+  port: 8080
