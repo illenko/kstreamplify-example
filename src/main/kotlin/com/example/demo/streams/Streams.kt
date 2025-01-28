@@ -1,6 +1,5 @@
 package com.example.demo.streams
 
-import com.example.demo.avro.Merchant
 import com.example.demo.avro.Payment
 import com.example.demo.avro.PaymentWithUser
 import com.example.demo.avro.User
@@ -28,9 +27,11 @@ class Streams : KafkaStreamsStarter() {
 
         payments.join(
             users,
-            { payment, user -> PaymentWithUser.newBuilder().setPayment(payment).setUser(user).build() },
+            { p, u -> PaymentWithUser.newBuilder().setPayment(p).setUser(u).build() },
             Joined.with(Serdes.String(), SerdesUtils.getValueSerdes(), SerdesUtils.getValueSerdes())
-        ).toTable(
+        ).selectKey { _, it ->
+            it.payment.id
+        }.toTable(
             Materialized.`as`<String, PaymentWithUser, KeyValueStore<Bytes, ByteArray>>("payments-with-users-store")
                 .withKeySerde(Serdes.String())
                 .withValueSerde(SerdesUtils.getValueSerdes())
