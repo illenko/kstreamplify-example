@@ -30,10 +30,6 @@
       "type": "string"
     },
     {
-      "name": "merchantId",
-      "type": "string"
-    },
-    {
       "name": "amount",
       "type": "long"
     }

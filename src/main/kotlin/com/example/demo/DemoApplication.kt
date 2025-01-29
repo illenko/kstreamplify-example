@@ -1,9 +1,7 @@
 package com.example.demo
 
-import com.example.demo.avro.Merchant
 import com.example.demo.avro.Payment
 import com.example.demo.avro.User
-import com.example.demo.producer.MerchantProducer
 import com.example.demo.producer.PaymentProducer
 import com.example.demo.producer.UserProducer
 import org.springframework.boot.ApplicationRunner
@@ -21,25 +19,7 @@ import kotlin.random.Random
 class DemoApplication(
     private val paymentProducer: PaymentProducer,
     private val userProducer: UserProducer,
-    private val merchantProducer: MerchantProducer
 ) {
-
-    private val merchants = listOf(
-        Merchant.newBuilder()
-            .setId("m1")
-            .setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"))
-            .setUpdatedAt(Instant.now())
-            .setName("Amazon")
-            .setCategory("E-commerce")
-            .build(),
-        Merchant.newBuilder()
-            .setId("m2")
-            .setCreatedAt(Instant.parse("2025-01-02T00:00:00Z"))
-            .setUpdatedAt(Instant.now())
-            .setName("eBay")
-            .setCategory("E-commerce")
-            .build()
-    )
 
     private val users = listOf(
         User.newBuilder()
@@ -69,21 +49,18 @@ class DemoApplication(
 
     @Bean
     fun runner() = ApplicationRunner {
-        merchants.forEach { merchantProducer.send(it) }
         users.forEach { userProducer.send(it) }
     }
 
     @Scheduled(fixedRate = 5000)
     fun producePayment() {
         val user = users.random()
-        val merchant = merchants.random()
         val payment = Payment.newBuilder()
             .setId("p${abs(Random.nextInt())}")
             .setCreatedAt(Instant.now())
             .setUpdatedAt(Instant.now())
             .setStatus(statuses.random())
             .setUserId(user.id)
-            .setMerchantId(merchant.id)
             .setAmount(Random.nextInt(1, 1000).toLong())
             .build()
 

@@ -1,8 +1,6 @@
 package com.example.demo.streams
 
-import com.example.demo.avro.Payment
-import com.example.demo.avro.PaymentWithUser
-import com.example.demo.avro.User
+import com.example.demo.avro.*
 import com.michelin.kstreamplify.initializer.KafkaStreamsStarter
 import com.michelin.kstreamplify.serde.SerdesUtils
 import org.apache.kafka.common.serialization.Serdes
@@ -25,16 +23,29 @@ class Streams : KafkaStreamsStarter() {
         val users =
             builder.table("users", Consumed.with<String, User>(Serdes.String(), SerdesUtils.getValueSerdes()))
 
-        payments.join(
+        val userPayments = payments.join(
             users,
             { p, u -> PaymentWithUser.newBuilder().setPayment(p).setUser(u).build() },
             Joined.with(Serdes.String(), SerdesUtils.getValueSerdes(), SerdesUtils.getValueSerdes())
-        ).selectKey { _, it ->
-            it.payment.id
-        }.toTable(
-            Materialized.`as`<String, PaymentWithUser, KeyValueStore<Bytes, ByteArray>>("payments-with-users-store")
+        )
+
+        userPayments.groupByKey().aggregate(
+            {
+                UserPayments.newBuilder()
+                    .setCount(0L)
+                    .setAmount(0L)
+                    .build()
+            },
+            { _, up, t ->
+                UserPayments.newBuilder()
+                    .setCount(t.count + 1)
+                    .setAmount(t.amount + up.payment.amount)
+                    .build()
+            },
+            Materialized.`as`<String, UserPayments, KeyValueStore<Bytes, ByteArray>>("user-payments")
                 .withKeySerde(Serdes.String())
                 .withValueSerde(SerdesUtils.getValueSerdes())
+
         )
     }
 
