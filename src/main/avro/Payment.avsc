@@ -8,22 +8,11 @@
       "type": "string"
     },
     {
-      "name": "createdAt",
+      "name": "datetime",
       "type": {
         "type": "long",
         "logicalType": "timestamp-millis"
       }
-    },
-    {
-      "name": "updatedAt",
-      "type": {
-        "type": "long",
-        "logicalType": "timestamp-millis"
-      }
-    },
-    {
-      "name": "status",
-      "type": "string"
     },
     {
       "name": "userId",
