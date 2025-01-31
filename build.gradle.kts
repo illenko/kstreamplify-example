@@ -34,6 +34,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("com.michelin:kstreamplify-spring-boot:$kstreamplifyVersion")
+    implementation("com.michelin:kstreamplify-core-test:$kstreamplifyVersion")
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("io.confluent:kafka-avro-serializer:$kafkaAvroSerializerVersion")
     implementation("io.swagger.core.v3:swagger-annotations:$swaggerAnnotationsVersion")
