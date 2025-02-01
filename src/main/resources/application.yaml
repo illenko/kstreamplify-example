@@ -21,6 +21,7 @@ kafka:
     state.dir: '/tmp/state'
     default.deserialization.exception.handler: 'com.michelin.kstreamplify.error.DlqDeserializationExceptionHandler'
     default.production.exception.handler: 'com.michelin.kstreamplify.error.DlqProductionExceptionHandler'
+    application.server.var.name: 'localhost'
 
 
 server:
