@@ -63,7 +63,7 @@ class DemoApplication(
                 .setId("p${abs(Random.nextInt())}")
                 .setDatetime(Instant.now())
                 .setUserId(user.id)
-                .setAmount(Random.nextInt(1, 1000).toLong())
+                .setAmount(Random.nextLong(1, 1000))
                 .build()
 
         paymentProducer.send(payment)

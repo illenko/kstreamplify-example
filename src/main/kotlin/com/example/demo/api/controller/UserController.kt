@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(
     private val userStoreService: UserStoreService,
 ) {
-    @GetMapping("/users/{id}/payments-amount")
+    @GetMapping("/users/{id}/spending")
     fun getUserPaymentsAmount(
         @PathVariable id: String,
     ) = userStoreService.getUserPaymentsAmount(id)

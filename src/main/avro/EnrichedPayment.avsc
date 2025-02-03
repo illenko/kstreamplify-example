@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "PaymentWithUser",
+  "name": "EnrichedPayment",
   "namespace": "com.example.demo.avro",
   "fields": [
     {

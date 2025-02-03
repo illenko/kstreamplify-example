@@ -1,7 +1,7 @@
 package com.example.demo.streams
 
+import com.example.demo.avro.EnrichedPayment
 import com.example.demo.avro.Payment
-import com.example.demo.avro.PaymentWithUser
 import com.example.demo.avro.User
 import com.michelin.kstreamplify.initializer.KafkaStreamsStarter
 import com.michelin.kstreamplify.serde.SerdesUtils
@@ -33,7 +33,7 @@ class Streams : KafkaStreamsStarter() {
             .join(
                 users,
                 { p, u ->
-                    PaymentWithUser
+                    EnrichedPayment
                         .newBuilder()
                         .setPayment(p)
                         .setUser(u)
@@ -41,7 +41,7 @@ class Streams : KafkaStreamsStarter() {
                 },
                 Joined.with(Serdes.String(), SerdesUtils.getValueSerdes(), SerdesUtils.getValueSerdes()),
             ).selectKey { _, it -> it.payment.id }
-            .to("payments-with-users", Produced.with(Serdes.String(), SerdesUtils.getValueSerdes()))
+            .to("enriched-payments", Produced.with(Serdes.String(), SerdesUtils.getValueSerdes()))
 
         val paymentsGroupedByUser =
             payments.groupByKey(
@@ -52,14 +52,14 @@ class Streams : KafkaStreamsStarter() {
             { 0L },
             { _, p, totalAmount -> totalAmount + p.amount },
             Materialized
-                .`as`<String, Long, KeyValueStore<Bytes, ByteArray>>("user-payment-amounts")
+                .`as`<String, Long, KeyValueStore<Bytes, ByteArray>>("user-spending")
                 .withKeySerde(Serdes.String())
                 .withValueSerde(Serdes.Long()),
         )
 
         paymentsGroupedByUser
             .windowedBy(TimeWindows.ofSizeAndGrace(Duration.ofSeconds(60), Duration.ofSeconds(5)))
-            .count(Materialized.`as`("user-payment-counts"))
+            .count(Materialized.`as`("user-payments"))
     }
 
     override fun dlqTopic(): String = "dlq-topic"

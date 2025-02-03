@@ -9,6 +9,9 @@ spring:
       properties:
         schema.registry.url: http://localhost:8081
 
+server:
+  port: 8080
+
 kafka:
   properties:
     acks: 'all'
@@ -22,7 +25,3 @@ kafka:
     default.deserialization.exception.handler: 'com.michelin.kstreamplify.error.DlqDeserializationExceptionHandler'
     default.production.exception.handler: 'com.michelin.kstreamplify.error.DlqProductionExceptionHandler'
     application.server.var.name: 'localhost'
-
-
-server:
-  port: 8080

@@ -10,6 +10,6 @@ class UserStoreService(
 ) {
     fun getUserPaymentsAmount(userId: String): UserPaymentAmount =
         keyValueStoreService
-            .getByKey("user-payment-amounts", userId)
+            .getByKey("user-spending", userId)
             .let { UserPaymentAmount(userId = it.key, amount = it.value as Long) }
 }
