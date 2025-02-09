@@ -1,7 +1,7 @@
 package com.example.demo.streams
 
+import com.example.demo.avro.EnrichedPayment
 import com.example.demo.avro.Payment
-import com.example.demo.avro.PaymentWithUser
 import com.example.demo.avro.User
 import com.michelin.kstreamplify.KafkaStreamsStarterTest
 import com.michelin.kstreamplify.initializer.KafkaStreamsStarter
@@ -18,7 +18,7 @@ import kotlin.test.assertTrue
 class StreamsTest : KafkaStreamsStarterTest() {
     private lateinit var usersTopic: TestInputTopic<String, User>
     private lateinit var paymentsTopic: TestInputTopic<String, Payment>
-    private lateinit var paymentWithUserTopic: TestOutputTopic<String, PaymentWithUser>
+    private lateinit var enrichedPaymentsTopic: TestOutputTopic<String, EnrichedPayment>
 
     override fun getKafkaStreamsStarter(): KafkaStreamsStarter = Streams()
 
@@ -36,11 +36,11 @@ class StreamsTest : KafkaStreamsStarterTest() {
                 Serdes.String().serializer(),
                 SerdesUtils.getValueSerdes<Payment>().serializer(),
             )
-        paymentWithUserTopic =
+        enrichedPaymentsTopic =
             testDriver.createOutputTopic(
-                "payments-with-users",
+                "enriched-payments",
                 Serdes.String().deserializer(),
-                SerdesUtils.getValueSerdes<PaymentWithUser>().deserializer(),
+                SerdesUtils.getValueSerdes<EnrichedPayment>().deserializer(),
             )
     }
 
@@ -86,8 +86,8 @@ class StreamsTest : KafkaStreamsStarterTest() {
         paymentsTopic.pipeInput(payment2.id, payment2)
         paymentsTopic.pipeInput(payment3.id, payment3)
 
-        val paymentWithUser1 = paymentWithUserTopic.readKeyValuesToList()
-        val paymentWithUser2 = paymentWithUserTopic.readKeyValuesToList()
+        val paymentWithUser1 = enrichedPaymentsTopic.readKeyValuesToList()
+        val paymentWithUser2 = enrichedPaymentsTopic.readKeyValuesToList()
 
         assertEquals(2, paymentWithUser1.size)
 
